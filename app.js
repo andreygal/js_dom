@@ -9,7 +9,7 @@ GAME RULES:
 
 */
 
-var scores, roundScore, activePlayer, diceDOM; 
+var scores, roundScore, activePlayer, diceDOM, gamePlaying; 
 
 scoreCards = ['score-0', 'score-1', 'current-0', 'current-1'];
 diceDOM = document.querySelector('.dice'); 
@@ -19,6 +19,7 @@ init();
 //document.querySelector('#current-' + activePlayer).textContent = dice; 
 //document.querySelector('#current-' + activePlayer).innerHTML = '<strong>' + dice + '</strong>';
 document.querySelector('.btn-roll').addEventListener('click', function() {
+    if (!gamePlaying) { return; }
     //Anonymous function
     var dice = 1 + Math.floor(Math.random() * 6); 
     diceDOM.style.display = 'block'; 
@@ -35,6 +36,7 @@ document.querySelector('.btn-roll').addEventListener('click', function() {
 }); 
 
 document.querySelector('.btn-hold').addEventListener('click', function() {
+     if (!gamePlaying) { return; }
      scores[activePlayer] += roundScore; 
      document.getElementById('score-' + activePlayer).textContent = scores[activePlayer];   
      
@@ -42,6 +44,7 @@ document.querySelector('.btn-hold').addEventListener('click', function() {
          document.querySelector('#name-' + activePlayer).textContent = 'Winner!';
          diceDOM.style.display = 'none'; 
          document.querySelector('.player-' + activePlayer + '-panel').classList.add('winner');
+         gamePlaying = false; 
      } else {
          togglePlayer();
      }
@@ -63,6 +66,7 @@ function togglePlayer() {
 }
 
 function init() {
+    gamePlaying = true; 
     diceDOM.style.display = 'none'; 
     roundScore = 0; 
     scores = [0, 0];
