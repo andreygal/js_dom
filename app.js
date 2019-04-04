@@ -9,7 +9,7 @@ GAME RULES:
 
 */
 
-var scores, roundScore, activePlayer, diceDOM, gamePlaying; 
+var scores, roundScore, activePlayer, dice, lastRoll, diceDOM, gamePlaying, targetScore; 
 
 scoreCards = ['score-0', 'score-1', 'current-0', 'current-1'];
 diceDOM = document.querySelector('.dice'); 
@@ -20,10 +20,18 @@ init();
 //document.querySelector('#current-' + activePlayer).innerHTML = '<strong>' + dice + '</strong>';
 document.querySelector('.btn-roll').addEventListener('click', function() {
     if (!gamePlaying) { return; }
-    //Anonymous function
-    var dice = 1 + Math.floor(Math.random() * 6); 
+
+    lastRoll = dice; 
+    dice = 1 + Math.floor(Math.random() * 6);
     diceDOM.style.display = 'block'; 
     diceDOM.src = 'dice-' + dice + '.png'; 
+    
+    if (lastRoll === 6 && lastRoll === dice) {
+      scores[activePlayer] = 0;
+      document.getElementById('score-' + activePlayer).textContent = scores[activePlayer]; 
+      togglePlayer();
+      return; 
+    } 
     
     if (dice !== 1) {
         roundScore += dice;
@@ -40,7 +48,7 @@ document.querySelector('.btn-hold').addEventListener('click', function() {
      scores[activePlayer] += roundScore; 
      document.getElementById('score-' + activePlayer).textContent = scores[activePlayer];   
      
-     if (scores[activePlayer] >= 100) {
+     if (scores[activePlayer] >= targetScore) {
          document.querySelector('#name-' + activePlayer).textContent = 'Winner!';
          diceDOM.style.display = 'none'; 
          document.querySelector('.player-' + activePlayer + '-panel').classList.add('winner');
@@ -55,14 +63,19 @@ document.querySelector('.btn-new').addEventListener('click', function() {
     init();
 }); 
 
+document.querySelector('#set-score').addEventListener('keydown', event => {
+  if (event.isComposing || event.keyCode === 13) {
+    return;
+  }
+}); 
+
+
 function togglePlayer() { 
     roundScore = 0; 
     document.querySelector('#current-' + activePlayer).textContent = roundScore;
-    
     activePlayer = activePlayer === 1 ? 0 : 1; 
     document.querySelector('.player-' + (activePlayer + 1) % 2 + '-panel').classList.remove('active');
     document.querySelector('.player-' + activePlayer + '-panel').classList.add('active');
-    
 }
 
 function init() {
