@@ -63,10 +63,12 @@ document.querySelector('.btn-new').addEventListener('click', function() {
     init();
 }); 
 
-document.querySelector('#set-score').addEventListener('keydown', event => {
-  if (event.isComposing || event.keyCode === 13) {
-    return;
-  }
+document.getElementById('set-score').addEventListener('keydown', function(event) {
+   var target = parseInt(document.getElementById('set-score').value);  
+   if (event.key === 'Enter') {
+    targetScore = target; 
+    init();
+    }
 }); 
 
 
@@ -78,13 +80,12 @@ function togglePlayer() {
     document.querySelector('.player-' + activePlayer + '-panel').classList.add('active');
 }
 
-function init() {
+function init() { 
     gamePlaying = true; 
     diceDOM.style.display = 'none'; 
     roundScore = 0; 
     scores = [0, 0];
     activePlayer = Math.floor(Math.random() * 2);
-    
     //zero the score cards
     for (var i = 0; i < scoreCards.length; i++) {
         document.getElementById(scoreCards[i]).textContent = '0'; 
